@@ -19,5 +19,21 @@ namespace Rocky.Controllers
             IEnumerable<Category> objList = _db.Category;
             return View(objList);
         }
+
+
+        //Get - Create;  GET-запросы, это те запросы которые возвращают View
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка, что токен действителен и безопасность данных сохранена
+        public IActionResult Create(Category obj)
+        {
+            _db.Category.Add(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index"); // перенапрявляем исполнение кода в метод Index
+        }
     }
 }
