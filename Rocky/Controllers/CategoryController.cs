@@ -57,5 +57,18 @@ namespace Rocky.Controllers
 
             return View(obj);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка, что токен действителен и безопасность данных сохранена
+        public IActionResult Edit(Category obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Category.Update(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index"); // перенапрявляем исполнение кода в метод Index
+            }
+            return View(obj);
+        }
     }
 }
