@@ -43,7 +43,7 @@ namespace Rocky.Controllers
         //Get - Edit;  GET-запросы, это те запросы которые возвращают View
         public IActionResult Edit(int id)
         {
-            if (id == null || id==0)
+            if (id==null || id==0)
             {
                 return NotFound();
             }
