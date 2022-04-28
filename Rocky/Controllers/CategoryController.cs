@@ -41,7 +41,7 @@ namespace Rocky.Controllers
         }
 
         //Get - Edit;  GET-запросы, это те запросы которые возвращают View
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int? id)
         {
             if (id==null || id==0)
             {
@@ -59,7 +59,8 @@ namespace Rocky.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка, что токен действителен и безопасность данных сохранена
+        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка,
+                                   //что токен действителен и безопасность данных сохранена
         public IActionResult Edit(Category obj)
         {
             if (ModelState.IsValid)
@@ -69,6 +70,41 @@ namespace Rocky.Controllers
                 return RedirectToAction("Index"); // перенапрявляем исполнение кода в метод Index
             }
             return View(obj);
+        }
+
+        //Get - Delete;  GET-запросы, это те запросы которые возвращают View
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var obj = _db.Category.Find(id);
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка,
+                                   //что токен действителен и безопасность данных сохранена
+        public IActionResult DeletePost(int? id)
+        {
+            var obj = _db.Category.Find(id);
+
+            if (obj==null)
+            {
+                return NotFound();
+            } 
+                _db.Category.Remove(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index"); // перенапрявляем исполнение кода в метод Index
+            
         }
     }
 }
