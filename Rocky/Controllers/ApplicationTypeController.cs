@@ -31,10 +31,76 @@ namespace Rocky.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ApplicationType obj)
         {
+            if(ModelState.IsValid)
+            { 
             _db.ApplicationType.Add(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
+            }
+            return View(obj);
         }
 
+        //Get - Edit;  GET-запросы, это те запросы которые возвращают View
+        public IActionResult Edit(int? id)
+        {
+            if(id==0 || id==null)
+            {
+                return NotFound();
+            }
+
+            var obj = _db.ApplicationType.Find(id);
+
+            if(obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка, что токен действителен и безопасность данных сохранена                             
+        public IActionResult Edit(ApplicationType obj)
+        {
+            if(ModelState.IsValid)
+            { 
+            _db.ApplicationType.Update(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+            }
+            return View(obj);
+        }
+
+        //Get - Delete;  GET-запросы, это те запросы которые возвращают View
+        public IActionResult Delete(int? id)
+        {
+            if (id == 0 || id == null)
+            {
+                return NotFound();
+            }
+            var obj = _db.ApplicationType.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка, что токен действителен и безопасность данных сохранена                             
+        public IActionResult DeletePost(int? id)
+        {
+            var obj = _db.ApplicationType.Find(id);
+
+          if(obj == null)
+            {
+                return NotFound();
+            }
+
+            _db.ApplicationType.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -7,7 +7,7 @@
         </div>
         <div class="col-6 text-right">
             <a asp-controller="ApplicationType" asp-action="Create" class="btn btn-primary">
-                Create New Application Type
+                <i class="fas fa-plus"></i> &nbsp; Create New Application Type
             </a>
         </div>
     </div>
@@ -36,7 +36,12 @@
                 {
                     <tr>
                         <td width="50%">@obj.Name</td>
-                        <td></td>
+                        <td>
+                            <div class="w-75 btn-group text-center" row="group">
+                                <a class="btn btn-primary mx-3" asp-controller="ApplicationType" asp-action="Edit" asp-route-Id="@obj.Id"><i class="fas fa-edit text-center"></i> &nbsp;</a>
+                                <a class="btn btn-danger mx-3" asp-controller="ApplicationType" asp-action="Delete" asp-route-Id="@obj.Id"><i class="fas fa-trash-alt text-center"></i> &nbsp;</a>
+                            </div>
+                        </td>
                         <!--Предназначен для создания одной ячейки таблицы.
                             Тег <td> должен размещаться внутри контейнера <tr>,
                             который в свою очередь располагается внутри тега <table>.-->
