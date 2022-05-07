@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Rocky.Data;
 using Rocky.Models;
+using Rocky.Models.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Rocky.Controllers
@@ -10,10 +15,12 @@ namespace Rocky.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController (ApplicationDbContext db)
+        public ProductController (ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -32,79 +39,149 @@ namespace Rocky.Controllers
         //Get - Upsert;  GET-запросы, это те запросы которые возвращают View
         public IActionResult Upsert(int? id)
         {
-            IEnumerable<SelectListItem> CategoryDropDown = _db.Category.Select(i => new SelectListItem
+            //IEnumerable<SelectListItem> CategoryDropDown = _db.Category.Select(i => new SelectListItem
+            //{
+            //    Text = i.Name,
+            //    Value = i.Id.ToString()
+            //});
+            //
+            ////ViewBag.CategoryDropDown = CategoryDropDown;//временные данные, которые нужно передать от контроллера к представлению
+            //ViewData["CategoryDropDown"] = CategoryDropDown;
+            //Product product = new Product();
+
+            ProductVM productVM = new ProductVM()
+            {
+                Product = new Product(),
+                CategorySelectList = _db.Category.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                })
+            };
+
+            if (id == 0 || id == null)
+            {
+                //code for Create
+                return View(productVM);
+            }
+            else
+            {
+                productVM.Product = _db.Product.Find(id);
+                if(productVM.Product==null)
+                {
+                    return NotFound();
+                }
+                return View(productVM);
+            }
+
+        }
+  
+  
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка,
+                                   //что токен действителен и безопасность данных сохранена
+        public IActionResult Upsert(ProductVM productVM)
+        {
+            if(ModelState.IsValid)
+            {
+                var files = HttpContext.Request.Form.Files; //получаем новое изображение, если оно загружено;
+                //HttpContext — это класс в C#, который содержит всю информацию о HTTP-запросе: авторизацию,
+                //аутентификацию, запрос, ответ, сеанс, элементы, пользователей, параметры формы и т. д.
+                //Каждый HTTP-запрос создает новый объект HttpContext с текущей информацией.
+
+                string webRootPath = _webHostEnvironment.WebRootPath; //путь к папке WWWROOT; получили путь к папке, где будут храниться файлы с картинками
+        
+                if(productVM.Product.Id == 0)
+                {
+                    //Creating
+                    string upload = webRootPath + WC.ImagePath; // WWWROOT + \images\product\, т.е. получим: j:\D_Programming\С_шарп\MyProjects\AspNetCoreMvc5\Part1\Rocky\Rocky\Rocky\wwwroot\images\product\
+                    string fileName = Guid.NewGuid().ToString();              
+                    string extension = Path.GetExtension(files[0].FileName); //получим расширение файла; 
+                                                                             //Класс Path содержит статические методы для удобной работы с именами файлов
+
+                    using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream); //копируем файл в новое место, которое определяется значением upload
+                    }
+
+                    productVM.Product.Image = fileName + extension; //обновляем ссылку на Image внутри сущности продукт, указав новый путь для доступа
+
+                    _db.Product.Add(productVM.Product);
+
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    //Updating
+
+                    //AsNoTracking() - добавили, чтобы объект objFromDb не отслеживался; чтобы не было путанницы между objFromDb  и  _db.Product.Update(productVM.Product); т.к. оба объекта отслеживаются с одинаковой парой ключ-значение
+                    var objFromDb = _db.Product.AsNoTracking().FirstOrDefault(u => u.Id == productVM.Product.Id); //извлекаем объект из БД, тослько чтобы получить ссылку на имя старого файла (фото)
+
+
+                    if(files.Count>0)
+                    { 
+                         string upload = webRootPath + WC.ImagePath;
+                         string fileName = Guid.NewGuid().ToString();
+                         string extension = Path.GetExtension(files[0].FileName); //получим расширение файла; 
+                                                                                  //Класс Path содержит статические методы для удобной работы с именами файлов
+                        var oldFile = Path.Combine(upload, objFromDb.Image);//создадим ссылку на старое фото
+                        
+                        if(System.IO.File.Exists(oldFile)) //если фото существует, удаляем
+                        {
+                            System.IO.File.Delete(oldFile);
+                        }
+                         
+                         using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                         {
+                             files[0].CopyTo(fileStream); //копируем файл в новое место, которое определяется значением upload
+                         }
+
+                        productVM.Product.Image = fileName + extension;
+
+                    }
+
+                    else
+
+                    {
+                        productVM.Product.Image = objFromDb.Image; //если изображение не изменилось, останется первоначальное изображение
+                    }
+
+                    _db.Product.Update(productVM.Product); // обновляться будет только этот объект
+                }
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+        
+            }
+            productVM.CategorySelectList = _db.Category.Select(i => new SelectListItem
             {
                 Text = i.Name,
                 Value = i.Id.ToString()
             });
 
-            ViewBag.CategoryDropDown = CategoryDropDown;//временные данные, которые нужно передать от контроллера к представлению
-
-            Product product = new Product();
-            if(id == 0 || id == null)
-            {
-                //code for Create
-                return View(product);
-            }
-            else
-            {
-                product = _db.Product.Find(id);
-                if(product==null)
-                {
-                    return NotFound();
-                }
-                return View(product);
-            }
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка, что токен действителен и безопасность данных сохранена
-        public IActionResult Upsert(Category obj)
-        {
-            if(ModelState.IsValid)
-            {
-                _db.Category.Add(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index"); // перенапрявляем исполнение кода в метод Index
-            }
-            return View(obj);
+            return View(productVM);
         }
 
 
-        //Get - Delete;  GET-запросы, это те запросы которые возвращают View
+        //Get - Upsert;  GET-запросы, это те запросы которые возвращают View
         public IActionResult Delete(int? id)
         {
-            if (id == null || id == 0)
+            if(id==0 || id==null)
             {
                 return NotFound();
             }
 
-            var obj = _db.Category.Find(id);
+            var obj = _db.Product.Find(id);
 
             if (obj == null)
             {
                 return NotFound();
             }
-
-            return View(obj);
+          
+                return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка,
-                                   //что токен действителен и безопасность данных сохранена
-        public IActionResult DeletePost(int? id)
-        {
-            var obj = _db.Category.Find(id);
 
-            if (obj==null)
-            {
-                return NotFound();
-            } 
-                _db.Category.Remove(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index"); // перенапрявляем исполнение кода в метод Index
-            
-        }
+
     }
 }
