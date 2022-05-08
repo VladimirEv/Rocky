@@ -25,12 +25,13 @@ namespace Rocky.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Product> objList = _db.Product;
+            IEnumerable<Product> objList = _db.Product.Include(u => u.Category).Include(u => u.ApplicationType); // жадная загрузка с использованием Include  
 
-            foreach (var obj in objList)
-            {
-                obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.CategoryId);
-            }
+            //foreach (var obj in objList)
+            //{
+            //    obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.CategoryId);
+            //    obj.ApplicationType = _db.ApplicationType.FirstOrDefault(u => u.Id == obj.ApplicationTypeId);
+            //}
 
             return View(objList);
         }
@@ -56,7 +57,13 @@ namespace Rocky.Controllers
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
-                })
+                }),
+
+                ApplicationTypeSelectList = _db.ApplicationType.Select(i => new SelectListItem
+                 {
+                     Text = i.Name,
+                     Value = i.Id.ToString()
+                 })
             };
 
             if (id == 0 || id == null)
@@ -159,11 +166,17 @@ namespace Rocky.Controllers
                 Value = i.Id.ToString()
             });
 
+            productVM.ApplicationTypeSelectList = _db.ApplicationType.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            });
+
             return View(productVM);
         }
 
 
-        //Get - Upsert;  GET-запросы, это те запросы которые возвращают View
+        //Get - Delete;  GET-запросы, это те запросы которые возвращают View
         public IActionResult Delete(int? id)
         {
             if(id==0 || id==null)
@@ -171,17 +184,46 @@ namespace Rocky.Controllers
                 return NotFound();
             }
 
+            //var product = _db.Product.Find(id);  - вместо этого будем использовать жадную загрузку; Вариант 1
+            //product.Category = _db.Category.Find(product.CategoryId); //Вариант 1
+
+            //жадная загрузка - это способ сообщийть EF CORE, что когда загружаем Product, нужно модефицировать операцию JOIN в БД
+            //и также загрузить соответствующую категорию, если эта запись будет найдена в БД;
+            //такой запрос, если извлекается несколько сущностей: var product = _db.Product.Include(u => u.Category).Where(u => u.Id == id);
+            var product = _db.Product.Include(u => u.Category).Include(u=>u.ApplicationType).FirstOrDefault(u => u.Id == id); // если извлекается одна сущность
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+          
+                return View(product);
+        }
+
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка,                                  
+        public IActionResult DeletePost(int? id)                 //что токен действителен и безопасность данных сохранена
+        {
             var obj = _db.Product.Find(id);
 
             if (obj == null)
             {
                 return NotFound();
             }
-          
-                return RedirectToAction("Index");
+
+            string upload = _webHostEnvironment.WebRootPath + WC.ImagePath;
+            var oldFile = Path.Combine(upload, obj.Image);                  //создадим ссылку на старое фото
+
+            if (System.IO.File.Exists(oldFile)) //если фото существует, удаляем
+            {
+                System.IO.File.Delete(oldFile);
+            }
+
+            _db.Product.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index"); // перенапрявляем исполнение кода в метод Index
+
         }
-
-
-
     }
 }

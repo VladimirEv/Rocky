@@ -10,6 +10,7 @@ namespace Rocky.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+        public string ShortDesc { get; set; }
         public string Description { get; set; }
         [Range(1,int.MaxValue)]
         public double Price { get; set; }
@@ -19,6 +20,11 @@ namespace Rocky.Models
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]                       //Чтобы установить свойство в качестве внешнего ключа, применяется атрибут [ForeignKey]:
         public virtual Category Category { get; set; }
+
+        [Display(Name="Application Type")]
+        public int ApplicationTypeId { get; set; }
+        [ForeignKey("ApplicationTypeId")]
+        public virtual ApplicationType ApplicationType { get; set; }
 
     }
 }

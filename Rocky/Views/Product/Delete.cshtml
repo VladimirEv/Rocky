@@ -1,6 +1,6 @@
-﻿@model Rocky.Models.ViewModels.ProductVM
+﻿@model Rocky.Models.Product
 
-<form method="post" asp-action="DeletePost">
+<form method="post">
     <input asp-for="Id" hidden />
     <div class="border p-3">
         <div class="form-group row">
@@ -20,10 +20,28 @@
 
                 <div class="form-group row">
                     <div class="col-4">
-                        <label asp-for="DisplayOrder"></label>
+                        <label asp-for="Price"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="DisplayOrder" disabled class="form-control" />
+                        <input asp-for="Price" disabled class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="CategoryId"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Category.Name" disabled class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="ApplicationTypeId"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="ApplicationType.Name" disabled class="form-control" />
                     </div>
                 </div>
 
