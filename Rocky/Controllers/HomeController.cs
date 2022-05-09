@@ -5,6 +5,7 @@ using Rocky.Data;
 using Rocky.Models;
 using Rocky.Models.ViewModels;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Rocky.Controllers
 {
@@ -27,6 +28,19 @@ namespace Rocky.Controllers
                 Categories = _db.Category
             };
             return View(homeVM);
+        }
+
+        //метод для получения деталей о товаре
+        public IActionResult Details(int? id)
+        {
+            DetailsVM DetailsVM = new DetailsVM()
+            {
+                Product = _db.Product.Include(u => u.Category).Include(u => u.ApplicationType).Where(u => u.Id == id).FirstOrDefault(), // WHERE возвращает много записей
+                //чтобы не было ошибки, т.к. Product возвращает только одну запись, запишем в конце FirstOrDefault()
+                ExistsInCart = false
+            };
+
+            return View(DetailsVM);
         }
 
         public IActionResult Privacy()
