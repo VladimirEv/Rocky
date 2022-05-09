@@ -33,5 +33,10 @@ namespace Rocky.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Work()
+        {
+            return View();
+        }
     }
 }
