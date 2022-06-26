@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rocky.Controllers
 {
@@ -97,7 +98,7 @@ namespace Rocky.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public IActionResult SummaryPost(ProductUserVM ProductUserVM)
+        public async Task<IActionResult> SummaryPost(ProductUserVM ProductUserVM)
         {
             var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()   //Path.DirectorySeparatorChar.ToString() - наклонная черта
                 + "templates" + Path.DirectorySeparatorChar.ToString() +
@@ -128,6 +129,8 @@ namespace Rocky.Controllers
                 ProductUserVM.ApplicationUser.PhoneNumber,
                 productListSB.ToString()
                 );
+
+            await _emailSender.SendEmailAsync(WC.EmailAdmin, subject, messageBody);
 
             return RedirectToAction(nameof(InquiryConfirmation));
         }

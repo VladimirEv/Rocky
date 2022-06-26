@@ -47,6 +47,8 @@
                             </div>
                         </li>
 
+                        @if(User.IsInRole(WC.AdminRole))
+                        {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Content Management
@@ -59,23 +61,25 @@
                                 <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create Admin User</a>
                             </div>
                         </li>
-                       <li>
-                           @if(HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null)
+                        }
+
+                        <li>                           
+                            @if(HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null)
                             {
-                               <a asp-action="Index" asp-controller="Cart" class="nav-link">
-                                   @{ 
+                            <a asp-action="Index" asp-controller="Cart" class="nav-link">
+                                @{
                                        var count = HttpContextAccessor.HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart).Count;
-                                   }
-                                   <i class="fas fa-shopping-cart"></i> &nbsp; (@count)
-                               </a>
+                                }
+                                <i class="fas fa-shopping-cart"></i> &nbsp; (@count)
+                            </a>
                             }
                             else
                             {
-                                    <a href="" class="nav-link">
-                                        <i class="fas fa-shopping-cart"></i> &nbsp; (0)
-                                    </a>
+                            <a href="" class="nav-link">
+                                <i class="fas fa-shopping-cart"></i> &nbsp; (0)
+                            </a>
                             }
-                       </li>
+                        </li>
                     </ul>
                 </div>
             </div>
