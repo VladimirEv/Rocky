@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rocky.Data;
+using Rocky.Utility;
 using System;
 
 namespace Rocky
@@ -28,6 +30,8 @@ namespace Rocky
             services.AddIdentity<IdentityUser,IdentityRole>()
                     .AddDefaultTokenProviders().AddDefaultUI()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddHttpContextAccessor();
             services.AddSession(Options =>
