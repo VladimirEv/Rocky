@@ -123,7 +123,7 @@ namespace Rocky.Areas.Identity.Pages.Account
                     {
                         if(!User.IsInRole(WC.AdminRole))
                         { 
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        await _signInManager.SignInAsync(user, isPersistent: false); 
                         }
                         else
                         {
