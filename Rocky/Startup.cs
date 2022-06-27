@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rocky.Data;
-using Rocky.Utility;
+using Rocky_Utility;
 using System;
 
 namespace Rocky
