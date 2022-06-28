@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Rocky.Data;
+using Rocky_DataAccess.Data;
 
-namespace Rocky.Migrations
+namespace Rocky_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220508164931_AddShortDescToProduct")]
-    partial class AddShortDescToProduct
+    [Migration("20220508154907_AddApplicationTypeToProductRename2")]
+    partial class AddApplicationTypeToProductRename2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,9 +80,6 @@ namespace Rocky.Migrations
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
-
-                    b.Property<string>("ShortDesc")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

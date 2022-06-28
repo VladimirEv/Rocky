@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Rocky.Data;
+using Rocky_DataAccess.Data;
 
-namespace Rocky.Migrations
+namespace Rocky_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220508154907_AddApplicationTypeToProductRename2")]
-    partial class AddApplicationTypeToProductRename2
+    [Migration("20220508152440_AddApplicationTypeToProductChangeApplicationIdNAme")]
+    partial class AddApplicationTypeToProductChangeApplicationIdNAme
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,7 +62,7 @@ namespace Rocky.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ApplicationTypeId")
+                    b.Property<int>("ApplicationId")
                         .HasColumnType("int");
 
                     b.Property<int>("CategoryId")
@@ -83,7 +83,7 @@ namespace Rocky.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationTypeId");
+                    b.HasIndex("ApplicationId");
 
                     b.HasIndex("CategoryId");
 
@@ -94,7 +94,7 @@ namespace Rocky.Migrations
                 {
                     b.HasOne("Rocky_Models.ApplicationType", "ApplicationType")
                         .WithMany()
-                        .HasForeignKey("ApplicationTypeId")
+                        .HasForeignKey("ApplicationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
