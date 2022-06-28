@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Rocky.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Rocky.Models.ViewModels
+
+namespace Rocky_Models.ViewModels
 {
     public class ProductVM
     {
