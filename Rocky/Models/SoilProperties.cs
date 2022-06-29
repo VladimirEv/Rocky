@@ -23,5 +23,7 @@ namespace Rocky.Models
 
         public double DeformationModulus { get; set; }         // E
 
+        public string NameOfSand { get; set; }                 //песок крупный, средний, мелкий
+
     }
 }
