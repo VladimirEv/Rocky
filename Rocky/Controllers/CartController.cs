@@ -19,7 +19,7 @@ namespace Rocky.Controllers
     [Authorize]
     public class CartController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly Data.ApplicationDbContext _db;
 
         private readonly IWebHostEnvironment _webHostEnvironment;
 
@@ -28,7 +28,7 @@ namespace Rocky.Controllers
         [BindProperty]                                   //привяжем свойство для POST запросов; и теперь нам не нужно указывать это свойство в качестве параметра ЯВНО
         public ProductUserVM ProductUserVM { get; set; }
 
-        public CartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
+        public CartController(Data.ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
         {
             _db = db;
             _webHostEnvironment = webHostEnvironment;

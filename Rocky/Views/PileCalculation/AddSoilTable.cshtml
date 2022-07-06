@@ -1,0 +1,142 @@
+﻿@model Rocky.Models.SoilProperties
+
+<form method="post" asp-action="AddSoilTable">
+    <!--POST-запросы отправляют какие-либо данные с View-->
+    <div class="border p-3">
+        @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+        <div class="form-group row">
+            <h2 class="text-info pl-3">Добавить грунт</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="NumberOfSoil">Номер грунта</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="NumberOfSoil" class="form-control" />
+                        <span asp-validation-for="NumberOfSoil" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Name">Наименование грунта</label>
+                    </div>
+                    <div class="col-8">
+                        <select id="Name" name="Name" value="">
+                            <option></option>
+                            <option>Песок</option>
+                            <option>Глинистый грунт</option>
+                        </select>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="NameOfSand">Крупность песка</label>
+                    </div>
+                    <div class="col-8">
+                        <select id="NameOfSand" name="NameOfSand" value="">
+                            <option></option>
+                            <option>гравелистый</option>
+                            <option>крупный</option>
+                            <option>средней крупности</option>
+                            <option>мелкий</option>
+                            <option>пылеватый</option>
+                        </select>
+                        <span asp-validation-for="NameOfSand" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="SoilStrengthForSand">Прочность грунта</label>
+                    </div>
+                    <div class="col-8">
+                        <select id="SoilStrengthForSand" name="SoilStrengthForSand" value="">
+                            <option></option>
+                            <option>Плотный</option>
+                        </select>
+                        <span asp-validation-for="SoilStrengthForSand" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="PorosityCoefficient">Коэффициент пористости</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="PorosityCoefficient" class="form-control" type="number" step="any" />
+                        <span asp-validation-for="PorosityCoefficient" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="YieldRate">Показатель текучести</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="YieldRate" class="form-control" type="number" step="any" />
+                        <span asp-validation-for="YieldRate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="AngleOfInternalFriction">Угол внутреннего трения, градусы</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="AngleOfInternalFriction" class="form-control" />
+                        <span asp-validation-for="AngleOfInternalFriction" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="SpecificAdhesion">Удельное сцепление, KПа</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="SpecificAdhesion" class="form-control" />
+                        <span asp-validation-for="SpecificAdhesion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="DeformationModulus">Модуль деформации, МПа</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="DeformationModulus" class="form-control" />
+                        <span asp-validation-for="DeformationModulus" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                            <input type="submit" class="btn btn-info w-100" value="Добавить грунт" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="SoilTable" class="btn btn-success w-100"><i class="fas fa-sign-out-alt"></i> &nbsp; Назад</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+

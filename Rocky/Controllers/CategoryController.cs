@@ -10,9 +10,9 @@ namespace Rocky.Controllers
     [Authorize(Roles=WC.AdminRole)]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly Data.ApplicationDbContext _db;
 
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(Data.ApplicationDbContext db)
         {
             _db = db;
         }

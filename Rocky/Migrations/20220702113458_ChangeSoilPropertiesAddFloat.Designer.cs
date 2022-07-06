@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rocky.Data;
 
 namespace Rocky.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220702113458_ChangeSoilPropertiesAddFloat")]
+    partial class ChangeSoilPropertiesAddFloat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -317,9 +319,8 @@ namespace Rocky.Migrations
                     b.Property<int>("NumberOfSoil")
                         .HasColumnType("int");
 
-                    b.Property<string>("PorosityCoefficient")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<float>("PorosityCoefficient")
+                        .HasColumnType("real");
 
                     b.Property<string>("SoilStrengthForSand")
                         .HasColumnType("nvarchar(max)");
@@ -327,8 +328,8 @@ namespace Rocky.Migrations
                     b.Property<float>("SpecificAdhesion")
                         .HasColumnType("real");
 
-                    b.Property<string>("YieldRate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("YieldRate")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

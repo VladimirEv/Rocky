@@ -1,77 +1,75 @@
 ﻿@model IEnumerable<SoilProperties>
 
-<form method="post">
-    <div class="row">
-        <div class="col-12">
-            <h2 class="text-center">Таблица грунтов</h2><br />
-            <table border="1" width="100%" cellpadding="8">
+<div class="row">
+    <div class="col-12">
+        <h4 class="text-center">Таблица грунтового основания</h4><br />
+        <table border="1" width="100%" cellpadding="8">
+            <tr>
+                <th class="text-center">Номер грунта</th>
+                <th class="text-center">Наименование грунта</th>
+                <th class="text-center">Крупность</th>
+                <th class="text-center">Прочность</th>
+                <th class="text-center">Пористость, e</th>
+                <th class="text-center">Показатель текучести, IL</th>
+                <th class="text-center">Угол внутреннего трения, &phi;</th>
+                <th class="text-center">Удельное сцепление, c (т/м2)</th>
+                <th class="text-center">Модуль деформации, Е (МПа)</th>
+                <th class="text-center">Удалить или редактировать грунт</th>
+            </tr>
+
+
+            @foreach (var item in Model)
+            {
                 <tr>
-                    <th class="text-center">Добавить грунт</th>
-                    <th class="text-center">Номер грунта</th>
-                    <th class="text-center">Наименование грунта</th>
-                    <th class="text-center">Крупность</th>
-                    <th class="text-center">Прочность</th>
-                    <th class="text-center">Пористость, e</th>
-                    <th class="text-center">Показатель текучести, IL</th>
-                    <th class="text-center">Угол внутреннего трения, &phi;</th>
-                    <th class="text-center">Удельное сцепление, c (т/м2)</th>
-                    <th class="text-center">Модуль деформации, Е (МПа)</th>
-                </tr>
-
-
-                <tr>
                     <th class="text-center">
-                        <button>+</button>
+                        @item.NumberOfSoil
+                    </th>
+                    <th class="text-center">
+                        @item.Name
                     </th>
 
                     <th class="text-center">
-                        <input type="text" id="NumberOfSoil" name="NumberOfSoil" size="3" value="" />
+                        @item.NameOfSand
                     </th>
                     <th class="text-center">
-                        <select id="Name" name="Name" value="">
-                            <option></option>
-                            <option>Песок</option>
-                            <option>Глинистый грунт</option>
-                        </select>
-                    </th>                   
-                    <th class="text-center">
-                        <select id="NameOfSand" name="NameOfSand" value="">
-                            <option></option>
-                            <option>гравелистый</option>
-                            <option>крупный</option>
-                            <option>средней крупности</option>
-                            <option>мелкий</option>
-                            <option>пылеватый</option>
-                        </select>
+                        @item.SoilStrengthForSand
                     </th>
                     <th class="text-center">
-                        <select id="SoilStrengthForSand" name="SoilStrengthForSand" value="">
-                            <option></option>
-                            <option>Плотный</option>
-                        </select>
+                        @item.PorosityCoefficient
                     </th>
                     <th class="text-center">
-                        <input type="text" id="PorosityCoefficient" name="PorosityCoefficient" size="5" value="" />
+                        @item.YieldRate
                     </th>
                     <th class="text-center">
-                        <input type="text" id="YieldRate" name="YieldRate" size="5" value="" />
+                        @item.AngleOfInternalFriction
                     </th>
                     <th class="text-center">
-                        <input type="text" id="AngleOfInternalFriction" name="AngleOfInternalFriction" size="5" value="" />
+                        @item.SpecificAdhesion
                     </th>
                     <th class="text-center">
-                        <input type="text" id="SpecificAdhesion" name="SpecificAdhesion" size="5" value="" />
+                        @item.DeformationModulus
                     </th>
                     <th class="text-center">
-                        <input type="text" id="DeformationModulus" name="DeformationModulus" size="5" value="" />
-                    </th>
-                    <th class="text-center">
-                        <button type="submit" asp-controller="Calculation" asp-action="AddWell">Добавить</button>
+                        <div class="w-75 btn-group text-center" role="group">
+                            <a asp-controller="PileCalculation" asp-action="Edit" asp-route-Id="@item.Id" class="btn btn-primary mx-2"><i class="fas fa-edit text-center"></i> &nbsp;</a>
+
+                            <a asp-controller="PileCalculation" asp-action="Delete" asp-route-Id="@item.Id" class="btn btn-danger mx-2"><i class="fas fa-trash-alt text-center"></i> &nbsp; </a>
+                        </div>                   
                     </th>
                 </tr>
-            </table>
-        </div>
+            }
+        </table>
     </div>
-</form>
+</div>
+<br />
+<br />
+<div>
+    <a asp-controller="PileCalculation" asp-action="AddSoilTable" class="btn btn-primary">
+        <i class="fas fa-plus"></i> &nbsp; Добавить грунт
+    </a>
+    <a asp-controller="PileCalculation" asp-action="Index" class="btn btn-success w-35">
+        <i class="fas fa-sign-out-alt"></i> &nbsp; Назад
+    </a>
+</div>
 
 

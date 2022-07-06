@@ -1,0 +1,130 @@
+﻿@model Rocky.Models.SoilProperties
+
+<form method="post">
+    <input asp-for="Id" hidden />
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info pl-3">Редактируем свойства грунта</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-8">
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="NumberOfSoil">Номер грунта</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="NumberOfSoil" class="form-control" />
+                        <span asp-validation-for="NumberOfSoil" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Name">Наименование грунта</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="NameOfSand"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="NameOfSand" class="form-control" />
+                        <span asp-validation-for="NameOfSand" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="SoilStrengthForSand"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="SoilStrengthForSand" class="form-control" />
+                        <span asp-validation-for="SoilStrengthForSand" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="PorosityCoefficient"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="PorosityCoefficient" class="form-control" />
+                        <span asp-validation-for="PorosityCoefficient" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="YieldRate"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="YieldRate" class="form-control" />
+                        <span asp-validation-for="YieldRate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="AngleOfInternalFriction"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="AngleOfInternalFriction" class="form-control" />
+                        <span asp-validation-for="AngleOfInternalFriction" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="SpecificAdhesion">Модуль деформации, МПа</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="SpecificAdhesion" class="form-control" />
+                        <span asp-validation-for="SpecificAdhesion" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="DeformationModulus">Модуль деформации, МПа</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="DeformationModulus" class="form-control" />
+                        <span asp-validation-for="DeformationModulus" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            <input type="submit" class="btn btn-info w-100" value="Обновить" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="SoilTable" class="btn btn-success w-100"><i class="fas fa-sign-out-alt"></i> &nbsp; Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
+
+
+

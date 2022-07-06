@@ -17,10 +17,10 @@ namespace Rocky.Controllers
     [Authorize(Roles =WC.AdminRole)]
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly Data.ApplicationDbContext _db;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController (ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        public ProductController (Data.ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
             _webHostEnvironment = webHostEnvironment;

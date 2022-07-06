@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Rocky.Models
 {
@@ -7,21 +8,29 @@ namespace Rocky.Models
         [Key]
         public int Id { get; set; }
 
+        [Required]
         public int NumberOfSoil { get; set; }                   //номер грунта по геологии
 
+        [Required]
         public string Name { get; set; }
 
         public string SoilStrengthForSand { get; set; }        //прочный ...
 
-        public double PorosityCoefficient { get; set; }        //e
+        [Required]
+        public string PorosityCoefficient { get; set; }        //e
+       
+        
+        public string YieldRate { get; set; }                  // IL
 
-        public double YieldRate { get; set; }                  // IL
+        
+        public float AngleOfInternalFriction { get; set; }    // фи
 
-        public double AngleOfInternalFriction { get; set; }    // фи
+        
+        public float SpecificAdhesion { get; set; }           // с
 
-        public double SpecificAdhesion { get; set; }           // с
+       
+        public float DeformationModulus { get; set; }         // E
 
-        public double DeformationModulus { get; set; }         // E
 
         public string NameOfSand { get; set; }                 //песок крупный, средний, мелкий
 
