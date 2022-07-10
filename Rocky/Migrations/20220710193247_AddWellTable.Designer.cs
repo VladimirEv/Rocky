@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rocky.Data;
 
 namespace Rocky.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220710193247_AddWellTable")]
+    partial class AddWellTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -345,9 +347,6 @@ namespace Rocky.Migrations
                     b.Property<string>("SoilLayerThickness")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SoilPropertiesId")
-                        .HasColumnType("int");
-
                     b.Property<string>("WellDepth")
                         .HasColumnType("nvarchar(max)");
 
@@ -355,8 +354,6 @@ namespace Rocky.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SoilPropertiesId");
 
                     b.ToTable("Well");
                 });
@@ -439,17 +436,6 @@ namespace Rocky.Migrations
                     b.Navigation("ApplicationType");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Rocky.Models.Well", b =>
-                {
-                    b.HasOne("Rocky.Models.SoilProperties", "SoilProperties")
-                        .WithMany()
-                        .HasForeignKey("SoilPropertiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("SoilProperties");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Well>
+
+<div class="row">
+    <div class="col-12">
+        <h4 class="text-center">Таблица грунтового основания</h4><br />
+        <table border="1" width="100%" cellpadding="8">
+            <tr>
+                <th class="text-center">Номер грунта</th>
+                <th class="text-center">Наименование грунта</th>
+                <th class="text-center">Крупность</th>
+                <th class="text-center">Прочность</th>
+                <th class="text-center">Пористость, e</th>
+                <th class="text-center">Показатель текучести, IL</th>
+                <th class="text-center">Угол внутреннего трения, &phi;</th>
+                <th class="text-center">Удельное сцепление, c (т/м2)</th>
+                <th class="text-center">Модуль деформации, Е (МПа)</th>
+                <th class="text-center">Удалить или редактировать грунт</th>
+            </tr>
+
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th class="text-center">
+                        @item.NumberOfSoil
+                    </th>
+                    <th class="text-center">
+                        @item.Name
+                    </th>
+
+                    <th class="text-center">
+                        @item.NameOfSand
+                    </th>
+                    <th class="text-center">
+                        @item.SoilStrengthForSand
+                    </th>
+                    <th class="text-center">
+                        @item.PorosityCoefficient
+                    </th>
+                    <th class="text-center">
+                        @item.YieldRate
+                    </th>
+                    <th class="text-center">
+                        @item.AngleOfInternalFriction
+                    </th>
+                    <th class="text-center">
+                        @item.SpecificAdhesion
+                    </th>
+                    <th class="text-center">
+                        @item.DeformationModulus
+                    </th>
+                    <th class="text-center">
+                        <div class="w-75 btn-group text-center" role="group">
+                            <a asp-controller="PileCalculation" asp-action="Edit" asp-route-Id="@item.Id" class="btn btn-primary mx-2"><i class="fas fa-edit text-center"></i> &nbsp;</a>
+
+                            <a asp-controller="PileCalculation" asp-action="Delete" asp-route-Id="@item.Id" class="btn btn-danger mx-2"><i class="fas fa-trash-alt text-center"></i> &nbsp; </a>
+                        </div>
+                    </th>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<br />
+<br />
+<div>
+    <a asp-controller="PileCalculation" asp-action="AddSoilTable" class="btn btn-primary">
+        <i class="fas fa-plus"></i> &nbsp; Добавить грунт
+    </a>
+    <a asp-controller="PileCalculation" asp-action="Index" class="btn btn-success w-35">
+        <i class="fas fa-sign-out-alt"></i> &nbsp; Назад
+    </a>
+</div>
+
+
