@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rocky_DataAccess.Data;
+using Rocky_DataAccess.Repository;
+using Rocky_DataAccess.Repository.IRepository;
 using Rocky_Utility;
 using System;
 
@@ -41,6 +43,9 @@ namespace Rocky
                 Options.Cookie.IsEssential = true;
             });
             services.AddControllersWithViews();
+
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IApplicationTypeRepository, ApplicationTypeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
