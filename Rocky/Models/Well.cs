@@ -5,8 +5,7 @@ namespace Rocky.Models
 {
     public class Well
     {
-        public int Id { get; set; }
-        public int WellNumber { get; set; }
+        public int Id { get; set; }        
         public string WellheadRewinding { get; set; }  //отметка устья скважины
         public string WellDepth { get; set; }          //глубина скважины
         public string SoilLayerThickness { get; set; }  // толщина слоя грунта
@@ -15,6 +14,8 @@ namespace Rocky.Models
         public int SoilPropertiesId { get; set; }      //id слоя грунта
         [ForeignKey("SoilPropertiesId")]                            //Чтобы установить свойство в качестве внешнего ключа, применяется атрибут [ForeignKey]:
         public virtual SoilProperties SoilProperties { get; set; }   // грунт
+
+      
 
     }
 }
