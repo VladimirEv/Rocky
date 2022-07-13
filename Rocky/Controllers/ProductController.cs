@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Rocky_DataAccess.Repository.IRepository;
 using Rocky_Models;
 using Rocky_Models.ViewModels;
@@ -10,7 +9,6 @@ using Rocky_Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Rocky.Controllers
 {
@@ -56,8 +54,8 @@ namespace Rocky.Controllers
             ProductVM productVM = new ProductVM()
             {
                 Product = new Product(),
-                CategorySelectList = (IEnumerable<SelectListItem>)_prodRepo.GetAllDropdownList(WC.CategoryName),
-                ApplicationTypeSelectList = (IEnumerable<SelectListItem>)_prodRepo.GetAllDropdownList(WC.ApplicationTypeName)
+                CategorySelectList = _prodRepo.GetAllDropdownList(WC.CategoryName),
+                ApplicationTypeSelectList = _prodRepo.GetAllDropdownList(WC.ApplicationTypeName)
             };
 
             if (id == 0 || id == null)
@@ -154,8 +152,8 @@ namespace Rocky.Controllers
             }
 
 
-            productVM.CategorySelectList = (IEnumerable<SelectListItem>)_prodRepo.GetAllDropdownList(WC.CategoryName);
-            productVM.ApplicationTypeSelectList = (IEnumerable<SelectListItem>)_prodRepo.GetAllDropdownList(WC.ApplicationTypeName);
+            productVM.CategorySelectList = _prodRepo.GetAllDropdownList(WC.CategoryName);
+            productVM.ApplicationTypeSelectList =_prodRepo.GetAllDropdownList(WC.ApplicationTypeName);
 
             return View(productVM);
         }
