@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Rocky_DataAccess.Data;
+using Rocky_DataAccess.Repository.IRepository;
 using Rocky_Models;
 using Rocky_Models.ViewModels;
 using Rocky_Utility;
@@ -17,18 +17,18 @@ namespace Rocky.Controllers
     [Authorize(Roles =WC.AdminRole)]
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IProductRepository _prodRepo;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController (ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        public ProductController (IProductRepository prodRepo, IWebHostEnvironment webHostEnvironment)
         {
-            _db = db;
+            _prodRepo = prodRepo;
             _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Product> objList = _db.Product.Include(u => u.Category).Include(u => u.ApplicationType); // жадная загрузка с использованием Include  
+            IEnumerable<Product> objList = _prodRepo.GetAll(includeProperties: "Category,ApplicationType"); 
 
             //foreach (var obj in objList)
             //{
@@ -56,17 +56,8 @@ namespace Rocky.Controllers
             ProductVM productVM = new ProductVM()
             {
                 Product = new Product(),
-                CategorySelectList = _db.Category.Select(i => new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.Id.ToString()
-                }),
-
-                ApplicationTypeSelectList = _db.ApplicationType.Select(i => new SelectListItem
-                 {
-                     Text = i.Name,
-                     Value = i.Id.ToString()
-                 })
+                CategorySelectList = (IEnumerable<SelectListItem>)_prodRepo.GetAllDropdownList(WC.CategoryName),
+                ApplicationTypeSelectList = (IEnumerable<SelectListItem>)_prodRepo.GetAllDropdownList(WC.ApplicationTypeName)
             };
 
             if (id == 0 || id == null)
@@ -76,7 +67,7 @@ namespace Rocky.Controllers
             }
             else
             {
-                productVM.Product = _db.Product.Find(id);
+                productVM.Product = _prodRepo.Find(id.GetValueOrDefault());
                 if(productVM.Product==null)
                 {
                     return NotFound();
@@ -117,16 +108,14 @@ namespace Rocky.Controllers
 
                     productVM.Product.Image = fileName + extension; //обновляем ссылку на Image внутри сущности продукт, указав новый путь для доступа
 
-                    _db.Product.Add(productVM.Product);
+                    _prodRepo.Add(productVM.Product);
 
-                    _db.SaveChanges();
+                    _prodRepo.Save();
                 }
                 else
                 {
-                    //Updating
-
-                    //AsNoTracking() - добавили, чтобы объект objFromDb не отслеживался; чтобы не было путанницы между objFromDb  и  _db.Product.Update(productVM.Product); т.к. оба объекта отслеживаются с одинаковой парой ключ-значение
-                    var objFromDb = _db.Product.AsNoTracking().FirstOrDefault(u => u.Id == productVM.Product.Id); //извлекаем объект из БД, тослько чтобы получить ссылку на имя старого файла (фото)
+                    //Updating                    
+                    var objFromDb = _prodRepo.FirstOrDefault(u => u.Id == productVM.Product.Id, isTracking:false); //извлекаем объект из БД, тослько чтобы получить ссылку на имя старого файла (фото)
 
 
                     if(files.Count>0)
@@ -157,23 +146,16 @@ namespace Rocky.Controllers
                         productVM.Product.Image = objFromDb.Image; //если изображение не изменилось, останется первоначальное изображение
                     }
 
-                    _db.Product.Update(productVM.Product); // обновляться будет только этот объект
+                    _prodRepo.Update(productVM.Product); // обновляться будет только этот объект
                 }
-                _db.SaveChanges();
+                _prodRepo.Save();
                 return RedirectToAction("Index");
         
             }
-            productVM.CategorySelectList = _db.Category.Select(i => new SelectListItem
-            {
-                Text = i.Name,
-                Value = i.Id.ToString()
-            });
 
-            productVM.ApplicationTypeSelectList = _db.ApplicationType.Select(i => new SelectListItem
-            {
-                Text = i.Name,
-                Value = i.Id.ToString()
-            });
+
+            productVM.CategorySelectList = (IEnumerable<SelectListItem>)_prodRepo.GetAllDropdownList(WC.CategoryName);
+            productVM.ApplicationTypeSelectList = (IEnumerable<SelectListItem>)_prodRepo.GetAllDropdownList(WC.ApplicationTypeName);
 
             return View(productVM);
         }
@@ -193,7 +175,7 @@ namespace Rocky.Controllers
             //жадная загрузка - это способ сообщийть EF CORE, что когда загружаем Product, нужно модефицировать операцию JOIN в БД
             //и также загрузить соответствующую категорию, если эта запись будет найдена в БД;
             //такой запрос, если извлекается несколько сущностей: var product = _db.Product.Include(u => u.Category).Where(u => u.Id == id);
-            var product = _db.Product.Include(u => u.Category).Include(u=>u.ApplicationType).FirstOrDefault(u => u.Id == id); // если извлекается одна сущность
+            var product = _prodRepo.FirstOrDefault(u=>u.Id==id, includeProperties: "Category,ApplicationType");
 
             if (product == null)
             {
@@ -208,7 +190,7 @@ namespace Rocky.Controllers
         [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка,                                  
         public IActionResult DeletePost(int? id)                 //что токен действителен и безопасность данных сохранена
         {
-            var obj = _db.Product.Find(id);
+            var obj = _prodRepo.Find(id.GetValueOrDefault());
 
             if (obj == null)
             {
@@ -223,8 +205,8 @@ namespace Rocky.Controllers
                 System.IO.File.Delete(oldFile);
             }
 
-            _db.Product.Remove(obj);
-            _db.SaveChanges();
+            _prodRepo.Remove(obj);
+            _prodRepo.Save();
             return RedirectToAction("Index"); // перенапрявляем исполнение кода в метод Index
 
         }

@@ -14,5 +14,9 @@ namespace Rocky_Utility
         public const string CustomerRole = "Customer";
 
         public const string EmailAdmin = "vladimir.ev.belevich@gmail.com";
+
+
+        public const string CategoryName = "Category";
+        public const string ApplicationTypeName = "ApplicationType";
     }
 }
