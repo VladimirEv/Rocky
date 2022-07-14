@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Rocky_DataAccess.Repository.IRepository;
 using Rocky_Models;
 using Rocky_Models.ViewModels;
@@ -18,21 +17,22 @@ namespace Rocky.Controllers
         private readonly IProductRepository _prodRepo;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController (IProductRepository prodRepo, IWebHostEnvironment webHostEnvironment)
+        public ProductController(IProductRepository prodRepo, IWebHostEnvironment webHostEnvironment)
         {
             _prodRepo = prodRepo;
             _webHostEnvironment = webHostEnvironment;
         }
 
+
         public IActionResult Index()
         {
-            IEnumerable<Product> objList = _prodRepo.GetAll(includeProperties: "Category,ApplicationType"); 
+            IEnumerable<Product> objList = _prodRepo.GetAll(includeProperties: "Category,ApplicationType");
 
-            //foreach (var obj in objList)
+            //foreach(var obj in objList)
             //{
             //    obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.CategoryId);
             //    obj.ApplicationType = _db.ApplicationType.FirstOrDefault(u => u.Id == obj.ApplicationTypeId);
-            //}
+            //};
 
             return View(objList);
         }
@@ -41,41 +41,42 @@ namespace Rocky.Controllers
         //Get - Upsert;  GET-запросы, это те запросы которые возвращают View
         public IActionResult Upsert(int? id)
         {
+
             //IEnumerable<SelectListItem> CategoryDropDown = _db.Category.Select(i => new SelectListItem
             //{
             //    Text = i.Name,
             //    Value = i.Id.ToString()
             //});
-            //
-            ////ViewBag.CategoryDropDown = CategoryDropDown;//временные данные, которые нужно передать от контроллера к представлению
+
+            ////ViewBag.CategoryDropDown = CategoryDropDown;
             //ViewData["CategoryDropDown"] = CategoryDropDown;
+
             //Product product = new Product();
 
             ProductVM productVM = new ProductVM()
             {
                 Product = new Product(),
                 CategorySelectList = _prodRepo.GetAllDropdownList(WC.CategoryName),
-                ApplicationTypeSelectList = _prodRepo.GetAllDropdownList(WC.ApplicationTypeName)
+                ApplicationTypeSelectList = _prodRepo.GetAllDropdownList(WC.ApplicationTypeName),
             };
 
-            if (id == 0 || id == null)
+            if (id == null)
             {
-                //code for Create
+                //this is for create
                 return View(productVM);
             }
             else
             {
                 productVM.Product = _prodRepo.Find(id.GetValueOrDefault());
-                if(productVM.Product==null)
+                if (productVM.Product == null)
                 {
                     return NotFound();
                 }
                 return View(productVM);
             }
-
         }
-  
-  
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken] //встроенный механизм для форм ввода, в который добавляется специальный токен защиты от взлома и в пост происходит проверка,
@@ -147,10 +148,8 @@ namespace Rocky.Controllers
                     _prodRepo.Update(productVM.Product); // обновляться будет только этот объект
                 }
                 _prodRepo.Save();
-                return RedirectToAction("Index");
-        
+                return RedirectToAction("Index");       
             }
-
 
             productVM.CategorySelectList = _prodRepo.GetAllDropdownList(WC.CategoryName);
             productVM.ApplicationTypeSelectList =_prodRepo.GetAllDropdownList(WC.ApplicationTypeName);

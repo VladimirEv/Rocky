@@ -7,11 +7,11 @@ namespace Rocky_DataAccess.Repository
 {
     public class ApplicationTypeRepository : Repository<ApplicationType>, IApplicationTypeRepository
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext _dbAdc;
 
-        public ApplicationTypeRepository(ApplicationDbContext db) : base(db)
+        public ApplicationTypeRepository(ApplicationDbContext dbAdc) : base(dbAdc)
         {
-            _db = db;
+            _dbAdc = dbAdc;
         }
 
         public void Update(ApplicationType obj)
