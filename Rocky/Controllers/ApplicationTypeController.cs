@@ -58,7 +58,6 @@ namespace Rocky.Controllers
             {
                 return NotFound();
             }
-
             return View(obj);
         }
 
@@ -68,9 +67,9 @@ namespace Rocky.Controllers
         {
             if(ModelState.IsValid)
             {
-                _appTypeRepo.Update(obj);
-                _appTypeRepo.Save();
-            return RedirectToAction("Index");
+               _appTypeRepo.Update(obj);
+               _appTypeRepo.Save();
+               return RedirectToAction("Index");
             }
             return View(obj);
         }

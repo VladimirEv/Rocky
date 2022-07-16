@@ -65,7 +65,7 @@ namespace Rocky.Controllers
                 //this is for create
                 return View(productVM);
             }
-            else
+             else
             {
                 productVM.Product = _prodRepo.Find(id.GetValueOrDefault());
                 if (productVM.Product == null)
