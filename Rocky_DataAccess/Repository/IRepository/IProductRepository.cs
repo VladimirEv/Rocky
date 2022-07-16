@@ -10,5 +10,6 @@ namespace Rocky_DataAccess.Repository.IRepository
         void Update(Product obj);
 
         IEnumerable<SelectListItem> GetAllDropdownList(string obj);
+        
     }
 }
