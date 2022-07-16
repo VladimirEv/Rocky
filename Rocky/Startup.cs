@@ -42,7 +42,7 @@ namespace Rocky
                 Options.Cookie.HttpOnly = true;
                 Options.Cookie.IsEssential = true;
             });
-            
+            services.AddControllersWithViews();
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IApplicationTypeRepository, ApplicationTypeRepository>();
@@ -50,8 +50,6 @@ namespace Rocky
             services.AddScoped<IInquiryHeaderRepository, InquiryHeaderRepository>();
             services.AddScoped<IInquiryDetailRepository, InquiryDetailRepository>();
             services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-
-            services.AddControllersWithViews();
 
         }
 
