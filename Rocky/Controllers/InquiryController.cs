@@ -23,5 +23,15 @@ namespace Rocky.Controllers
         {
             return View();
         }
+
+        #region API CALLS (API для получени всех запросов и представления их в ответ на вызов API)
+
+        [HttpGet]
+        public IActionResult GetInquiryList()
+        {
+            return Json(new { data = _inqHRepo.GetAll() });  //получаем запросы клиентов из БД и передаём их из этого метода в виде JSON объекта
+        }
+
+        #endregion
     }
 }
