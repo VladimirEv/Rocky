@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Rocky_DataAccess.Repository;
 using Rocky_DataAccess.Repository.IRepository;
+using Rocky_Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,10 @@ namespace Rocky.Controllers
         private readonly IInquiryHeaderRepository _inqHRepo;
         private readonly IInquiryDetailRepository _inqDRepo;
 
+        [BindProperty]
+        public InquiryVM InquiryVM { get; set; }
+
+
         public InquiryController(IInquiryHeaderRepository inqHRepo, IInquiryDetailRepository inqDRepo)
         {
             _inqHRepo = inqHRepo;
@@ -23,6 +28,20 @@ namespace Rocky.Controllers
         {
             return View();
         }
+
+        //настраиваем таблицу с деталями запроса
+        [HttpGet]
+        public IActionResult Details(int id)
+        {
+            InquiryVM = new InquiryVM()
+            {
+                InquiryHeader = _inqHRepo.FirstOrDefault(u=>u.Id==id),
+                InquiryDetail = _inqDRepo.GetAll(u=>u.InquiryHeaderId==id, includeProperties:"Product")
+            };
+
+            return View(InquiryVM);
+        }
+
 
         #region API CALLS (API для получени всех запросов и представления их в ответ на вызов API)
 
