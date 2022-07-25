@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Rocky_DataAccess.Repository;
 using Rocky_DataAccess.Repository.IRepository;
+using Rocky_Models;
 using Rocky_Models.ViewModels;
+using Rocky_Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +42,28 @@ namespace Rocky.Controllers
             };
 
             return View(InquiryVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Details()
+        {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            InquiryVM.InquiryDetail = _inqDRepo.GetAll(U => U.InquiryHeaderId == InquiryVM.InquiryHeader.Id); //ПОЛУЧИМ ИНФОРМ. О ТОВАРАХ КОНКРЕТНОГО ЗАПРОСА КЛИЕНТА
+
+            foreach (var detail in InquiryVM.InquiryDetail)
+            {
+                ShoppingCart shoppingCart = new ShoppingCart()
+                {
+                    ProductId = detail.ProductId
+                };
+                shoppingCartList.Add(shoppingCart);
+            }
+            HttpContext.Session.Clear(); //очищаем значение текущей сессии
+            HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
+            HttpContext.Session.Set(WC.SessionInquiryId, InquiryVM.InquiryHeader.Id);
+
+            return RedirectToAction("Index", "Cart");
         }
 
 
