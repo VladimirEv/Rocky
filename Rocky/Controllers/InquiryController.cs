@@ -1,16 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Rocky_DataAccess.Repository;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Rocky_DataAccess;
 using Rocky_DataAccess.Repository.IRepository;
 using Rocky_Models;
 using Rocky_Models.ViewModels;
 using Rocky_Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Rocky.Controllers
 {
+    [Authorize(Roles=WC.AdminRole)]
     public class InquiryController : Controller   //код для вывода заголовка запроса
     {
         private readonly IInquiryHeaderRepository _inqHRepo;
@@ -18,6 +20,7 @@ namespace Rocky.Controllers
 
         [BindProperty]
         public InquiryVM InquiryVM { get; set; }
+
 
 
         public InquiryController(IInquiryHeaderRepository inqHRepo, IInquiryDetailRepository inqDRepo)
@@ -64,6 +67,19 @@ namespace Rocky.Controllers
             HttpContext.Session.Set(WC.SessionInquiryId, InquiryVM.InquiryHeader.Id);
 
             return RedirectToAction("Index", "Cart");
+        }
+
+        [HttpPost]
+        public IActionResult Delete()
+        {
+            InquiryHeader inquiryHeader = _inqHRepo.FirstOrDefault(u => u.Id == InquiryVM.InquiryHeader.Id); // получим актуальное значение InquiryHeader
+            IEnumerable<InquiryDetail> inquiryDetails = _inqDRepo.GetAll(u => u.InquiryHeaderId == InquiryVM.InquiryHeader.Id); //извлечом детали запроса
+
+            _inqDRepo.RemoveRange(inquiryDetails);
+            _inqHRepo.Remove(inquiryHeader);
+            _inqHRepo.Save();
+
+            return RedirectToAction(nameof(Index));
         }
 
 
